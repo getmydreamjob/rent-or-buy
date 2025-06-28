@@ -1,5 +1,11 @@
 import streamlit as st
 
+def parse_input(text):
+    try:
+        return float(text)
+    except:
+        return 0.0
+
 def calculate_rent_cost(rent, rent_increase, insurance, years):
     total_rent = 0
     current_rent = rent
@@ -13,16 +19,17 @@ def calculate_buy_cost(price, down_payment, mortgage_rate, loan_term, tax, insur
     loan = price - down_payment
     monthly_rate = mortgage_rate / 100 / 12
     n_payments = loan_term * 12
-    monthly_payment = loan * (monthly_rate * (1 + monthly_rate) ** n_payments) / ((1 + monthly_rate) ** n_payments - 1)
+    if monthly_rate > 0:
+        monthly_payment = loan * (monthly_rate * (1 + monthly_rate) ** n_payments) / ((1 + monthly_rate) ** n_payments - 1)
+    else:
+        monthly_payment = loan / n_payments
     
     total_mortgage_paid = monthly_payment * 12 * years
-    principal_paid = 0
     balance = loan
     
     for _ in range(years * 12):
         interest = balance * monthly_rate
         principal = monthly_payment - interest
-        principal_paid += principal
         balance -= principal
 
     property_tax = tax * years
@@ -49,21 +56,21 @@ st.title("🏠 Rent vs Buy Calculator")
 
 st.markdown("Enter your details below to see which option might be better for you.")
 
-st.header("Rent Info")
-rent = st.number_input("Monthly rent ($)", help="Enter your current monthly rent amount in dollars.", value=0.0, placeholder="e.g. 2500")
-rent_increase = st.number_input("Annual rent increase (%)", help="Expected yearly rent increase as a percentage.", value=0.0, placeholder="e.g. 3")
-rent_insurance = st.number_input("Renters insurance per year ($)", help="Yearly cost of your renters insurance.", value=0.0, placeholder="e.g. 200")
+st.header("📌 Rent Info")
+rent = parse_input(st.text_input("Monthly rent ($)", placeholder="e.g. 2500", help="Enter your current monthly rent amount in dollars."))
+rent_increase = parse_input(st.text_input("Annual rent increase (%)", placeholder="e.g. 3", help="Expected yearly rent increase as a percentage."))
+rent_insurance = parse_input(st.text_input("Renters insurance per year ($)", placeholder="e.g. 200", help="Yearly cost of your renters insurance."))
 
-st.header("Buy Info")
-price = st.number_input("Home price ($)", help="Total price of the home you want to buy.", value=0.0, placeholder="e.g. 600000")
-down_payment = st.number_input("Down payment ($)", help="How much you plan to pay upfront as down payment.", value=0.0, placeholder="e.g. 120000")
-mortgage_rate = st.number_input("Mortgage rate (%)", help="Your mortgage's annual interest rate percentage.", value=0.0, placeholder="e.g. 6.5")
-loan_term = st.number_input("Loan term (years)", help="Number of years for your mortgage loan.", value=0.0, placeholder="e.g. 30")
-property_tax = st.number_input("Property tax per year ($)", help="Annual property tax amount.", value=0.0, placeholder="e.g. 6000")
-home_insurance = st.number_input("Homeowners insurance per year ($)", help="Yearly cost of your homeowners insurance.", value=0.0, placeholder="e.g. 1500")
-maintenance_pct = st.number_input("Annual maintenance (% of home value)", help="Percentage of home value spent on maintenance per year.", value=0.0, placeholder="e.g. 1")
-appreciation = st.number_input("Home appreciation (%)", help="Expected annual home value growth percentage.", value=0.0, placeholder="e.g. 3")
-sell_cost_pct = st.number_input("Selling cost (% of final home price)", help="Percentage of home price lost to selling costs when you sell.", value=0.0, placeholder="e.g. 7")
+st.header("📌 Buy Info")
+price = parse_input(st.text_input("Home price ($)", placeholder="e.g. 600000", help="Total price of the home you want to buy."))
+down_payment = parse_input(st.text_input("Down payment ($)", placeholder="e.g. 120000", help="How much you plan to pay upfront as down payment."))
+mortgage_rate = parse_input(st.text_input("Mortgage rate (%)", placeholder="e.g. 6.5", help="Your mortgage's annual interest rate percentage."))
+loan_term = parse_input(st.text_input("Loan term (years)", placeholder="e.g. 30", help="Number of years for your mortgage loan."))
+property_tax = parse_input(st.text_input("Property tax per year ($)", placeholder="e.g. 6000", help="Annual property tax amount."))
+home_insurance = parse_input(st.text_input("Homeowners insurance per year ($)", placeholder="e.g. 1500", help="Yearly cost of your homeowners insurance."))
+maintenance_pct = parse_input(st.text_input("Annual maintenance (% of home value)", placeholder="e.g. 1", help="Percentage of home value spent on maintenance per year."))
+appreciation = parse_input(st.text_input("Home appreciation (%)", placeholder="e.g. 3", help="Expected annual home value growth percentage."))
+sell_cost_pct = parse_input(st.text_input("Selling cost (% of final home price)", placeholder="e.g. 7", help="Percentage of home price lost to selling costs when you sell."))
 
 st.header("⏳ Time")
 years = st.slider("Years you plan to stay", 1, 30, 7)

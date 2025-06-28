@@ -63,8 +63,14 @@ rent_insurance = parse_input(st.text_input("Renters insurance per year ($)", pla
 
 st.header("📌 Buy Info")
 price = parse_input(st.text_input("Home price ($)", placeholder="e.g. 600000", help="Total price of the home you want to buy."))
-down_payment = parse_input(st.text_input("Down payment ($)", placeholder="e.g. 120000", help="How much you plan to pay upfront as down payment."))
-mortgage_rate = parse_input(st.text_input("Mortgage rate (%)", placeholder="e.g. 6.5", help="Your mortgage's annual interest rate percentage."))
+down_payment = parse_input(
+    st.text_input(
+        "Down payment (%)", 
+        placeholder="e.g. 20% of price", 
+        help="Enter the down payment amount in percentage (e.g. 20% of home price)."
+    )
+)
+mortgage_rate = parse_input(st.text_input("Mortgage Interest rate (%)", placeholder="e.g. 6.5", help="Your mortgage's annual interest rate percentage."))
 loan_term = parse_input(st.text_input("Loan term (years)", placeholder="e.g. 30", help="Number of years for your mortgage loan."))
 property_tax = parse_input(st.text_input("Property tax per year ($)", placeholder="e.g. 6000", help="Annual property tax amount."))
 home_insurance = parse_input(st.text_input("Homeowners insurance per year ($)", placeholder="e.g. 1500", help="Yearly cost of your homeowners insurance."))
